@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-express
+  labels:
+    app: {{ .Release.Name }}-express
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-express
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-express
+    spec:
+      containers:
+        - name: express-helm-app
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: 3000
+          env:
+            - name: DB_HOST
+              value: "{{ .Release.Name }}-postgresql"
+            - name: DB_USER
+              value: "{{ .Values.postgresql.username }}"
+            - name: DB_PASSWORD
+              value: "{{ .Values.postgresql.password }}"
+            - name: DB_NAME
+              value: "{{ .Values.postgresql.database }}"

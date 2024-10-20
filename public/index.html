@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>File Upload/Download</title>
+</head>
+<body>
+  <h1>File Upload/Download</h1>
+
+  <!-- File upload form -->
+  <h2>Upload a File</h2>
+  <form id="uploadForm" enctype="multipart/form-data">
+    <input type="file" name="file" id="fileInput" required>
+    <button type="submit">Upload</button>
+  </form>
+
+  <p id="uploadMessage"></p>
+
+  <!-- File download form -->
+  <h2>Download a File</h2>
+  <input type="text" id="downloadFileName" placeholder="Enter filename">
+  <button id="downloadButton">Download</button>
+
+  <script>
+    // Handle file upload
+    document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const fileInput = document.getElementById('fileInput');
+      const formData = new FormData();
+      formData.append('file', fileInput.files[0]);
+
+      const response = await fetch('/upload', {
+        method: 'POST',
+        body: formData
+      });
+
+      const result = await response.json();
+      document.getElementById('uploadMessage').textContent = result.message || result.error;
+    });
+
+    // Handle file download
+    document.getElementById('downloadButton').addEventListener('click', () => {
+      const fileName = document.getElementById('downloadFileName').value;
+      if (fileName) {
+        window.location.href = `/download/${fileName}`;
+      } else {
+        alert('Please enter a file name');
+      }
+    });
+  </script>
+</body>
+</html>

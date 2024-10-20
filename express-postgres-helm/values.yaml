@@ -1,0 +1,32 @@
+# Default values for express-postgres-helm.
+
+# Application name
+name: express-postgres-helm
+
+# Image settings
+image:
+  repository: syarifuddinhrn/express-postgres-k8s
+  tag: latest
+  pullPolicy: IfNotPresent
+
+# Application port
+service:
+  type: NodePort
+  port: 3000
+  nodePort: 30080
+
+# PostgreSQL settings
+postgresql:
+  enabled: true
+  image:
+    repository: postgres
+    tag: "13"
+  username: user1
+  password: Qwer@123
+  database: postgres
+  servicePort: 5432
+  persistence:
+    enabled: true
+    accessModes:
+      - ReadWriteOnce
+    size: 1Gi
